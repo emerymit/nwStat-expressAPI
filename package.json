@@ -1,0 +1,12 @@
+{
+  "name": "nwstatapi",
+  "version": "1.0.0",
+  "description": "api for postgresql db, providing stored network stats",
+  "main": "index.js",
+  "author": "Mitch Emery",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "pg": "^8.2.1"
+  }
+}
