@@ -13,7 +13,8 @@ app.use(function (req, res, next) {
   	next();
 });
 
-app.get('/', (req, res) => {
+//gets raw dump of all data
+app.get('/GetAll', (req, res) => {
 	nwstat_model.getNwStats()
 	.then(response => {
 		res.status(200).send(response);
@@ -23,9 +24,9 @@ app.get('/', (req, res) => {
 	})
 })
 
-
-app.delete('/nwstats/:deldate', (req, res) => {
-	nwstat_model.deleteNwStats(req.params.deldate)
+//gets average down speed of all data
+app.get('/AvgDown', (req, res) => {
+	nwstat_model.getAvgDownSpeed()
 	.then(response => {
 		res.status(200).send(response);
 	})
@@ -33,6 +34,95 @@ app.delete('/nwstats/:deldate', (req, res) => {
 		res.status(500).send(error);
 	})
 })
+
+//gets average down speed of all data
+app.get('/AvgUp', (req, res) => {
+	nwstat_model.getAvgUpSpeed()
+	.then(response => {
+		res.status(200).send(response);
+	})
+	.catch(error => {
+		res.status(500).send(error);
+	})
+})
+
+//gets average down speed of all data
+app.get('/AvgPing', (req, res) => {
+	nwstat_model.getAvgPing()
+	.then(response => {
+		res.status(200).send(response);
+	})
+	.catch(error => {
+		res.status(500).send(error);
+	})
+})
+
+//get yesterdays average down speed
+app.get('/YdAvgDown', (req, res) => {
+	nwstat_model.getLastDayAvgDown()
+	.then(response => {
+		res.status(200).send(response);
+	})
+	.catch(error => {
+		res.status(500).send(error);
+	})
+})
+
+//get yesterdays average up speed
+app.get('/YdAvgUp', (req, res) => {
+	nwstat_model.getLastDayAvgUp()
+	.then(response => {
+		res.status(200).send(response);
+	})
+	.catch(error => {
+		res.status(500).send(error);
+	})
+})
+
+//get yesterdays average ping
+app.get('/YdAvgPing', (req, res) => {
+	nwstat_model.getLastDayAvgPing()
+	.then(response => {
+		res.status(200).send(response);
+	})
+	.catch(error => {
+		res.status(500).send(error);
+	})
+})
+
+//get yesterdays average ping
+app.get('/YdAvgPing', (req, res) => {
+	nwstat_model.getLastDayAvgPing()
+	.then(response => {
+		res.status(200).send(response);
+	})
+	.catch(error => {
+		res.status(500).send(error);
+	})
+})
+
+
+//returns the servers and how many tests have been run against each one
+app.get('/ServerDistribution', (req, res) => {
+	nwstat_model.getServerTestDist()
+	.then(response => {
+		res.status(200).send(response);
+	})
+	.catch(error => {
+		res.status(500).send(error);
+	})
+})
+
+//not tested 
+// app.delete('/nwstats/:deldate', (req, res) => {
+// 	nwstat_model.deleteNwStats(req.params.deldate)
+// 	.then(response => {
+// 		res.status(200).send(response);
+// 	})
+// 	.catch(error => {
+// 		res.status(500).send(error);
+// 	})
+// })
 
 
 app.listen(port, () => {

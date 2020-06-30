@@ -1,3 +1,4 @@
+//Base set up for db connection
 const Pool = require('pg').Pool
 const pool = new Pool({
 	user: 'amigo',
@@ -7,6 +8,7 @@ const pool = new Pool({
 	port: 5432,
 });
 
+//returns raw dump of values, ordered by time descending 
 const getNwStats = () => {
 	return new Promise (function(resolve, reject) {
 		pool.query('SELECT * FROM networkstats ORDER BY time DESC', (error, results) => {
@@ -18,6 +20,7 @@ const getNwStats = () => {
 	})
 }
 
+//deletes entries older than specified time date
 const deleteNwStats = () => {
 	return new Promise(function(resolve, reject){
 		const deldate = Date.parse(request.params.deldate)
@@ -30,7 +33,112 @@ const deleteNwStats = () => {
 	})
 }
 
+//returns the average download speed
+const getAvgDownSpeed = () => {
+	return new Promise (function(resolve, reject) {
+		pool.query('SELECT AVG(download) FROM networkstats', (error, results) => {
+			if(error) {
+				reject (error)
+			}
+			resolve(results.rows);
+		})
+	})
+}
+
+//returns the average upload speed
+const getAvgUpSpeed = () => {
+	return new Promise (function(resolve, reject) {
+		pool.query('SELECT AVG(upload) FROM networkstats', (error, results) => {
+			if(error) {
+				reject (error)
+			}
+			resolve(results.rows);
+		})
+	})
+}
+
+//returns the average ping
+const getAvgPing = () => {
+	return new Promise (function(resolve, reject) {
+		pool.query('SELECT AVG(ping) FROM networkstats', (error, results) => {
+			if(error) {
+				reject (error)
+			}
+			resolve(results.rows);
+		})
+	})
+}
+
+//get yesterdays (back from last test) avg down
+const getLastDayAvgDown = () => {
+	return new Promise (function(resolve, reject) {
+		pool.query('select AVG(download) FROM (SELECT download FROM networkstats order by time desc LIMIT 48) as AverageDown', (error, results) => {
+			if(error) {
+				reject (error)
+			}
+			resolve(results.rows);
+		})
+	})
+}
+
+//get yesterdays (back from last test) avg up 
+const getLastDayAvgUp = () => {
+	return new Promise (function(resolve, reject) {
+		pool.query('select AVG(upload) FROM (SELECT upload FROM networkstats order by time desc LIMIT 48) as AverageUp', (error, results) => {
+			if(error) {
+				reject (error)
+			}
+			resolve(results.rows);
+		})
+	})
+}
+
+//get yesterdays (back from last test) avg ping
+const getLastDayAvgPing = () => {
+	return new Promise (function(resolve, reject) {
+		pool.query('select AVG(ping) FROM (SELECT ping FROM networkstats order by time desc LIMIT 48) as AveragePing', (error, results) => {
+			if(error) {
+				reject (error)
+			}
+			resolve(results.rows);
+		})
+	})
+}
+
+//returns all the servers and the total tests run against each target
+const getServerTestDist = () => {
+	return new Promise (function(resolve, reject) {
+		pool.query('select serverloc, COUNT(serverloc) as TestCount from networkstats group by serverloc order by TestCount DESC', (error, results) => {
+			if(error) {
+				reject (error)
+			}
+			resolve(results.rows);
+		})
+	})
+}
+
+//get the lasts days (back from now) raw dump of up down and time 
+const getUpDownTimeLastDay = () => {
+	return new Promise(function(resolve, reject) {
+		pool.query('select upload, download, time from networkstats order by time desc limit 48', (error, results) => {
+			if(error) {
+				reject (error)
+			}
+			resolve(results.rows);
+		})
+	})
+}
+
+
 module.exports = {
 	getNwStats,
 	deleteNwStats,
+	getAvgDownSpeed,
+	getAvgUpSpeed,
+	getAvgPing,
+	getLastDayAvgDown,
+	getLastDayAvgUp,
+	getLastDayAvgPing,
+	getServerTestDist,
+	getUpDownTimeLastDay,
 }
