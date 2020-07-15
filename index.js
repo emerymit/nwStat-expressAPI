@@ -3,6 +3,7 @@ const app = express()
 const port = 3001
 
 const nwstat_model = require('./networkstat_model')
+const { response } = require('express')
 
 
 app.use(express.json())
@@ -113,6 +114,16 @@ app.get('/ServerDistribution', (req, res) => {
 	})
 })
 
+app.get('/GetHistoricalData', (req, res) => {
+	nwstat_model.getHistoricalDataByDay()
+	.then(response => {
+		res.status(200).send(response);
+	})
+	.catch(error => {
+		res.status(500).send(error);
+	})
+})
+
 //not tested 
 // app.delete('/nwstats/:deldate', (req, res) => {
 // 	nwstat_model.deleteNwStats(req.params.deldate)
@@ -126,5 +137,5 @@ app.get('/ServerDistribution', (req, res) => {
 
 
 app.listen(port, () => {
-	console.log('App running on port ${port}.')
+	console.log(`App running on port ${port}.`)
 })

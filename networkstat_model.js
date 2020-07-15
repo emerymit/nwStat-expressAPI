@@ -129,6 +129,29 @@ const getUpDownTimeLastDay = () => {
 	})
 }
 
+//Functions for graphs
+//average up down and ping, by day, for days that have EXACTLY 48 data points
+const getHistoricalDataByDay = () => {
+	return new Promise(function(resolve, reject) {
+		pool.query(
+		`select 
+			date_trunc('day', time) as days, 
+			AVG(download) as download,
+			AVG(upload) as upload,
+			AVG(ping) as ping,
+			count(download) as dailycount 
+		from networkstats 
+		group by days
+		having count(download) = 48
+		order by days desc`, (error, results) => {
+			if(error){
+				reject (error)
+			}
+			resolve(results.rows);
+		})
+	})
+}
+
 
 module.exports = {
 	getNwStats,
@@ -141,4 +164,5 @@ module.exports = {
 	getLastDayAvgPing,
 	getServerTestDist,
 	getUpDownTimeLastDay,
+	getHistoricalDataByDay,
 }
