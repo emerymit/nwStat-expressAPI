@@ -124,6 +124,16 @@ app.get('/GetHistoricalData', (req, res) => {
 	})
 })
 
+app.get('/GetStatCount', (req, res) => {
+	nwstat_model.getStatCount()
+	.then(response => {
+		res.status(200).send(response);
+	})
+	.catch(error => {
+		res.status(500).send(error);
+	})
+})
+
 //not tested 
 // app.delete('/nwstats/:deldate', (req, res) => {
 // 	nwstat_model.deleteNwStats(req.params.deldate)

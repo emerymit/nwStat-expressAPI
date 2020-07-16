@@ -11,7 +11,7 @@ const pool = new Pool({
 //returns raw dump of values, ordered by time descending 
 const getNwStats = () => {
 	return new Promise (function(resolve, reject) {
-		pool.query('SELECT * FROM networkstats ORDER BY time DESC', (error, results) => {
+		pool.query('SELECT * FROM networkstats ORDER BY time DESC LIMIT 336', (error, results) => {
 			if(error) {
 				reject (error)
 			}
@@ -152,6 +152,19 @@ const getHistoricalDataByDay = () => {
 	})
 }
 
+//get the count of all the rows 
+const getStatCount = () => {
+	return new Promise(function(resolve, reject) {
+		pool.query(
+		'SELECT COUNT(*) FROM networkstats', (error, results) => {
+			if(error){
+				reject (error)
+			}
+			resolve(results.rows);
+		})
+	})
+}
+
 
 module.exports = {
 	getNwStats,
@@ -165,4 +178,5 @@ module.exports = {
 	getServerTestDist,
 	getUpDownTimeLastDay,
 	getHistoricalDataByDay,
+	getStatCount,
 }
